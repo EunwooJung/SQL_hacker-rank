@@ -1,0 +1,12 @@
+SELECT bike_id
+FROM (
+      SELECT bike_id, SUM(distance) / 1000
+      FROM (
+            SELECT *
+            FROM rental_history
+            WHERE rent_at LIKE '2021-01%'
+              AND return_at LIKE '2021-01%'
+      ) AS tbl_bike
+      GROUP BY bike_id
+      HAVING SUM(distance) / 1000 >= 50
+) AS tbl_bike_distance
