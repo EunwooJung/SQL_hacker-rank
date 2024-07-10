@@ -1,0 +1,12 @@
+SELECT *
+FROM tips
+WHERE day IN (
+    SELECT day
+    FROM (
+          SELECT day,
+                SUM(total_bill) AS revenue
+          FROM tips
+          GROUP BY day
+          HAVING revenue >= 1500
+    ) AS tbl_days_revenue
+)
