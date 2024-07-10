@@ -1,0 +1,6 @@
+SELECT SUBSTRING(order_purchase_timestamp, 1, 10) AS dt,
+       SUM(payment_value) AS revenue_daily
+FROM olist_orders_dataset O
+JOIN olist_order_payments_dataset P ON O.order_id = P.order_id
+WHERE SUBSTRING(order_purchase_timestamp, 1, 10) >= '2018-01-01'
+GROUP BY dt
