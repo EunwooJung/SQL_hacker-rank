@@ -1,0 +1,14 @@
+-- 2000년 이후의 메달 수상 기록만
+-- 메달을 수상한 올림픽 참가 선수 중 2개 이상의 국적으로 메달을 수상
+-- 선수의 이름을 조회하는 쿼리
+-- 조회된 선수의 이름은 오름차순으로 정렬
+
+SELECT name
+FROM athletes A
+JOIN records R ON A.id = R.athlete_id
+JOIN games G ON R.game_id = G.id
+WHERE G.year >= 2000
+  AND R.medal IS NOT NULL
+GROUP BY R.athlete_id
+HAVING count(DISTINCT R.team_id) >= 2
+ORDER BY A.name 
