@@ -1,0 +1,26 @@
+SELECT
+  tbl_ct.Region,
+  SUM(CASE
+    WHEN category = 'Furniture' THEN tbl_ct.num
+    ELSE 0
+  END) AS Furniture,
+  SUM(CASE
+    WHEN category = 'Office Supplies' THEN tbl_ct.num
+    ELSE 0
+  END) AS 'Office Supplies',
+  SUM(CASE
+    WHEN category = 'Technology' THEN tbl_ct.num
+    ELSE 0
+  END) AS Technology
+FROM
+  (SELECT 
+          region AS Region,
+          category,
+          COUNT(DISTINCT order_id) AS num
+   FROM records
+   GROUP BY Region, category
+  ) AS tbl_ct
+GROUP BY
+  tbl_ct.Region
+ORDER BY
+  tbl_ct.Region;
