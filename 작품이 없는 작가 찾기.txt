@@ -1,0 +1,5 @@
+SELECT A.artist_id, A.name
+FROM artists A
+LEFT JOIN artworks_artists AA ON A.artist_id = AA.artist_id
+WHERE AA.artist_id IS NULL
+  AND A.death_year IS NOT NULL
