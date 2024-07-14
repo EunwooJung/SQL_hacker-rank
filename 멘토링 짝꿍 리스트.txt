@@ -1,0 +1,25 @@
+WITH tbl_mentee AS (
+    SELECT employee_id AS mentee_id,
+           name AS mentee_name,
+           department AS mentee_department
+    FROM employees
+    WHERE (julianday('2021-12-31') - julianday(join_date)) + 1 <= 90
+),
+tbl_mentor AS (
+    SELECT employee_id AS mentor_id,
+           name AS mentor_name,
+           department AS mentor_department
+    FROM employees
+    WHERE (julianday('2021-12-31') - julianday(join_date)) + 1 >= 730
+)
+SELECT 
+    m.mentee_id, 
+    m.mentee_name, 
+    t.mentor_id, 
+    t.mentor_name
+FROM 
+    tbl_mentee m
+    LEFT JOIN tbl_mentor t ON m.mentee_department != t.mentor_department
+ORDER BY 
+    m.mentee_id, 
+    t.mentor_id;
