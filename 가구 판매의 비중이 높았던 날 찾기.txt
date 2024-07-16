@@ -1,0 +1,19 @@
+-- 일별 주문 수가 10개 이상인 날 
+-- ‘Furniture’ 카테고리 주문의 비율이 40% 이상
+-- Furniture 카테고리의 주문 비율이 높은 것부터 보여주도록 정렬
+-- 비율이 같다면 날짜 순으로 정렬
+
+
+SELECT order_date,
+       furniture,
+       ROUND((furniture + 0.00) / (total_num + 0.00) * 100, 2) AS 'furniture_pct'
+FROM (
+      SELECT order_date,
+            COUNT(DISTINCT order_id) AS total_num,
+            COUNT(DISTINCT CASE WHEN category = 'Furniture' THEN order_id ELSE NULL END) AS 'furniture'
+      FROM records
+      GROUP BY order_date
+) AS tbl_furniture
+WHERE total_num >= 10
+  AND ROUND((furniture + 0.00) / (total_num + 0.00) * 100, 2) >= 40
+ORDER BY furniture_pct DESC, order_date
