@@ -1,0 +1,12 @@
+SELECT dt, pu, revenue_daily, ROUND(SUM(revenue_daily) / SUM(pu), 2) AS arppu
+FROM (
+SELECT SUBSTRING(order_purchase_timestamp, 1, 10) AS dt,
+      COUNT(DISTINCT customer_id) AS pu,
+      SUM(payment_value) AS revenue_daily
+FROM olist_orders_dataset O
+LEFT JOIN olist_order_payments_dataset P ON O.order_id = P.order_id
+WHERE SUBSTRING(order_purchase_timestamp, 1, 10) >= '2018-01-01'
+GROUP BY dt 
+) AS tbl_orders
+GROUP BY dt
+ORDER BY dt
