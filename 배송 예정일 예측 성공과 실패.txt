@@ -1,0 +1,22 @@
+-- 2017년 1월 한 달 동안 발생한 주문의 배송 예측이 정확했는지 분석
+-- 고객의 구매 일자별
+-- 배송 예정 시각 안에 고객에게 도착한 주문
+-- 배송 예정 시각이 지나서 고객에게 도착한 주문
+-- 배송 완료 또는 배송 예정 시각 데이터가 없는 경우 제외
+-- 계산 결과는 구매 날짜를 기준으로 오름차순 정렬
+
+WITH tbl_orders AS (
+SELECT SUBSTRING(order_purchase_timestamp, 1, 10) AS purchase_date,
+       order_delivered_customer_date,
+       order_estimated_delivery_date
+FROM olist_orders_dataset
+WHERE order_delivered_customer_date IS NOT NULL
+  AND order_estimated_delivery_date IS NOT NULL
+)
+SELECT purchase_date,
+       SUM(CASE WHEN order_delivered_customer_date <= order_estimated_delivery_date THEN 1 ELSE 0 END) AS success,
+       SUM(CASE WHEN order_delivered_customer_date > order_estimated_delivery_date THEN 1 ELSE 0 END) AS fail 
+FROM tbl_orders
+WHERE purchase_date LIKE '2017-01%'
+GROUP BY purchase_date
+ORDER BY purchase_date
